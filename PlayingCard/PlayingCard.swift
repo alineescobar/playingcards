@@ -40,7 +40,7 @@ struct PlayingCard {
         }
         
         static var all: [Rank] {
-            var allRanks: [Rank] = [.ace]
+            var allRanks = [Rank.ace]
             for pips in 2...10 {
                 allRanks.append(Rank.numeric(pips))
             }
