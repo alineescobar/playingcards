@@ -10,7 +10,7 @@ import UIKit
 class PlayingCardView: UIView {
     
     var rank: Int = 5 { didSet { setNeedsDisplay(); setNeedsLayout()} }
-    var suit: String = "♥️" { didSet { setNeedsDisplay(); setNeedsLayout()} }
+    var suit: String = "♣️" { didSet { setNeedsDisplay(); setNeedsLayout()} }
     var isFacedUp: Bool = true { didSet { setNeedsDisplay(); setNeedsLayout()} }
 
     private func centeredAttribuitedString(_ string: String, fontSize: CGFloat) -> NSAttributedString {
@@ -43,36 +43,34 @@ class PlayingCardView: UIView {
         label.isHidden = !isFacedUp
     }
     
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        setNeedsDisplay()
+        setNeedsLayout()
+    }
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         configureCornerLabel(upperLeftCornerLabel)
         upperLeftCornerLabel.frame.origin = bounds.origin.offsetBy(dx: cornerOffset, dy: cornerOffset)
+        
+        configureCornerLabel(lowerRightCornerLabel)
+        lowerRightCornerLabel.transform = CGAffineTransform.identity
+            .translatedBy(x: lowerRightCornerLabel.frame.size.width, y: lowerRightCornerLabel.frame.size.height)
+            .rotated(by: CGFloat.pi)
+        lowerRightCornerLabel.frame.origin = CGPoint(x: bounds.maxX, y: bounds.maxY)
+            .offsetBy(dx: -cornerOffset, dy: -cornerOffset)
+            .offsetBy(dx: -lowerRightCornerLabel.frame.size.width, dy: -lowerRightCornerLabel.frame.size.height)
     }
     override func draw(_ rect: CGRect) {
         
         let roundedRect = UIBezierPath(roundedRect: bounds, cornerRadius: cornerRadius)
         roundedRect.addClip() //no drawing outside of the rect
-        UIColor.darkGray.setFill()
+        UIColor.white.setFill()
         roundedRect.fill()
-    
         
-//        if let context = UIGraphicsGetCurrentContext(){
-//            context.addArc(center: CGPoint(x: bounds.midX, y: bounds.midY), radius: 100.0, startAngle: 0, endAngle: 2*CGFloat.pi, clockwise: true)
-//            context.setLineWidth(5.0)
-//            UIColor.red.setFill()
-//            UIColor.black.setStroke()
-//            context.strokePath()
-//            context.fillPath()
-//        }
-        
-//        let path = UIBezierPath()
-//        path.addArc(withCenter: CGPoint(x: bounds.midX, y: bounds.midY), radius: 100.0, startAngle: 0, endAngle: 2*CGFloat.pi, clockwise: true)
-//        path.lineWidth = 5.0
-//        UIColor.red.setFill()
-//        UIColor.black.setStroke()
-//        path.stroke()
-//        path.fill()
-//    }
+        if let faceCardImage = UIImage(named: rankString+suit) {
+            faceCardImage.draw(in: bounds.zoom(by: SizeRatio.faceCardImageSizeToBoundSize))
+        }
     }
 }
 
