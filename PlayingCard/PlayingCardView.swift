@@ -12,7 +12,7 @@ class PlayingCardView: UIView {
     
     var rank: Int = 11 { didSet { setNeedsDisplay(); setNeedsLayout()} }
     var suit: String = "♣️" { didSet { setNeedsDisplay(); setNeedsLayout()} }
-    var isFacedUp: Bool = true { didSet { setNeedsDisplay(); setNeedsLayout()} }
+    var isFacedUp: Bool = false { didSet { setNeedsDisplay(); setNeedsLayout()} }
 
     private func centeredAttribuitedString(_ string: String, fontSize: CGFloat) -> NSAttributedString {
         var font = UIFont.preferredFont(forTextStyle: .body).withSize(fontSize)
