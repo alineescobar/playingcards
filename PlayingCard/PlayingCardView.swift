@@ -7,6 +7,7 @@
 
 import UIKit
 @IBDesignable
+
 class PlayingCardView: UIView {
     
     var rank: Int = 11 { didSet { setNeedsDisplay(); setNeedsLayout()} }
