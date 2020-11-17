@@ -6,10 +6,10 @@
 // to mantain the aspect ratio in the view set the content mode to Redraw
 
 import UIKit
-
+@IBDesignable
 class PlayingCardView: UIView {
     
-    var rank: Int = 1 { didSet { setNeedsDisplay(); setNeedsLayout()} }
+    var rank: Int = 11 { didSet { setNeedsDisplay(); setNeedsLayout()} }
     var suit: String = "♣️" { didSet { setNeedsDisplay(); setNeedsLayout()} }
     var isFacedUp: Bool = true { didSet { setNeedsDisplay(); setNeedsLayout()} }
 
@@ -108,10 +108,16 @@ class PlayingCardView: UIView {
         UIColor.white.setFill()
         roundedRect.fill()
         
-        if let faceCardImage = UIImage(named: rankString+suit) {
-            faceCardImage.draw(in: bounds.zoom(by: SizeRatio.faceCardImageSizeToBoundSize))
+        if isFacedUp {
+            if let faceCardImage = UIImage(named: rankString+suit, in: Bundle(for: self.classForCoder), compatibleWith: traitCollection) {
+                faceCardImage.draw(in: bounds.zoom(by: SizeRatio.faceCardImageSizeToBoundSize))
+            } else {
+                drawPips()
+            }
         } else {
-            drawPips()
+            if let cardBack = UIImage(named: "cardback", in: Bundle(for: self.classForCoder), compatibleWith: traitCollection) {
+                cardBack.draw(in: bounds)
+            }
         }
     }
 }
