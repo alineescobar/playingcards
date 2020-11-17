@@ -10,10 +10,19 @@ import UIKit
 
 class PlayingCardView: UIView {
     
-    var rank: Int = 11 { didSet { setNeedsDisplay(); setNeedsLayout()} }
+    var rank: Int = 7 { didSet { setNeedsDisplay(); setNeedsLayout()} }
     var suit: String = "♣️" { didSet { setNeedsDisplay(); setNeedsLayout()} }
-    var isFacedUp: Bool = false { didSet { setNeedsDisplay(); setNeedsLayout()} }
-
+    var isFacedUp: Bool = true { didSet { setNeedsDisplay(); setNeedsLayout()} }
+    var faceCardScale: CGFloat = SizeRatio.faceCardImageSizeToBoundSize { didSet { setNeedsDisplay() } }
+    
+    @objc func adjustFaceCardScale(byHandlingGestureReconizdBy reconizer: UIPinchGestureRecognizer) {
+        switch reconizer.state {
+        case .changed, .ended:
+            faceCardScale *= reconizer.scale
+            reconizer.scale = 1.0
+        default: break
+        }
+    }
     private func centeredAttribuitedString(_ string: String, fontSize: CGFloat) -> NSAttributedString {
         var font = UIFont.preferredFont(forTextStyle: .body).withSize(fontSize)
         font = UIFontMetrics(forTextStyle: .body).scaledFont(for: font)
@@ -111,7 +120,7 @@ class PlayingCardView: UIView {
         
         if isFacedUp {
             if let faceCardImage = UIImage(named: rankString+suit, in: Bundle(for: self.classForCoder), compatibleWith: traitCollection) {
-                faceCardImage.draw(in: bounds.zoom(by: SizeRatio.faceCardImageSizeToBoundSize))
+                faceCardImage.draw(in: bounds.zoom(by: faceCardScale))
             } else {
                 drawPips()
             }
